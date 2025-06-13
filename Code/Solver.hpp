@@ -210,12 +210,12 @@ Solver::Solver(string dir0, Lattice mylattice0, ReadInputFiles params)
       cout<< "Could not open file." << endl;
   #endif
 
-  /*for(int i = 0; i < N; i++)
+  for(int i = 0; i < N; i++)
   {
     cout << "Site " << i << ":" << endl;
 
     for(int j = 0; j < nnbrs[i]; j++) cout << "coupling " << couplings[i][j] << " to site " << neighbours[i][j] << endl;
-  }*/
+  }
 }
 
 void Solver::solve(double beta0)

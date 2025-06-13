@@ -2,13 +2,13 @@ import os
 import numpy as np
 import random
 
-mainproject = "SSL_Square_RING200x200"  #Set to zero if only one project.
+mainproject = "SSL_SquareOBC_Test"  #Set to zero if only one project.
 project = "SI0_minE"
 description = "Running SSL square lattice."
 jobname = "myjob"
 time = "5:00:00"
-runmin = 11
-runmax = 11
+runmin = 1
+runmax = 1
 runsame = 0
 nruns = (runmax-runmin) + 1
 NICE = 11
@@ -17,11 +17,11 @@ NICE = 11
 #BOOST = 0       #Higher precision in Eigen-calculations. Time-consuming. Not implemented for now.
 
 #LATTICE#
-lattice   = "SQUARE"
-NX        = 200*np.ones(nruns, int) #np.array([2], int) #2*np.ones(nruns, int)
+lattice   = "SQUAREOBC"
+NX        = 5*np.ones(nruns, int) #np.array([2], int) #2*np.ones(nruns, int)
 nruns     = len(NX)
 runmax    = runmin + (nruns-1)
-NY        = 200*np.ones(nruns, int)
+NY        = 5*np.ones(nruns, int)
 if lattice == "FCC" or lattice == "DIAMOND" or lattice == "TETRAGONALDIAMOND" or lattice == "PYROCHLORE": #If lattice is three dimensional...
     NZ    = 1*np.ones(nruns, int)
 else:
@@ -41,8 +41,8 @@ J3a    = 0*np.ones(nruns)
 J3b    = 0*np.ones(nruns)
 DXY    = 0*np.ones(nruns) #Single ion anisotropy, favouring XY-plane.
 
-ncyc        = int(1e1)
-nequ        = int(1e4)
+ncyc        = int(1e3)
+nequ        = int(1e3)
 nbins       = int(1)
 nconew      = int(100)
 print       = int(ncyc)    #Write out data every print cycle.

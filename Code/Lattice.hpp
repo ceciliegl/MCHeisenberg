@@ -49,7 +49,7 @@ Lattice::Lattice(ReadInputFiles params)
   N = Nx*Ny*Nz;
   Nq = N;
 
-  if(latticetype == "SQUARE" || latticetype == "CUBIC" || latticetype == "TRIANGULAR"
+  if(latticetype == "SQUARE" || latticetype == "SQUAREOBC" || latticetype == "CUBIC" || latticetype == "TRIANGULAR"
       || latticetype == "CHAIN" || latticetype == "TRIANGULARLADDER"){subn = 1;}
   else if(latticetype == "KAGOME"){subn = 3;}
   else if(latticetype == "PYROCHLORE"){subn = 4;}
@@ -80,6 +80,7 @@ Lattice::Lattice(ReadInputFiles params)
 
   if(latticetype == "CHAIN" || latticetype == "TRIANGULARLADDER") nnbrmax = 4;
   else if(latticetype == "SQUARE") nnbrmax = 12;
+  else if(latticetype == "SQUAREOBC") nnbrmax = 12;
   else if(latticetype == "TRIANGULAR") nnbrmax = 6;
   else if(latticetype == "KAGOME") nnbrmax = 4;
   else if(latticetype == "PYRO16") nnbrmax = 6;
@@ -102,7 +103,7 @@ Lattice::Lattice(ReadInputFiles params)
   subvecs = vector<vec3>(subn);
   subvecs[0] = vec3(0,0,0);
 
-  if(latticetype == "CHAIN" || latticetype == "SQUARE" || latticetype == "CUBIC" || latticetype == "PYRO16")
+  if(latticetype == "CHAIN" || latticetype == "SQUARE" || latticetype == "SQUAREOBC" || latticetype == "CUBIC" || latticetype == "PYRO16")
   {
     a1 = vec3(1.,0,0);
     a2 = vec3(0,1.,0);
@@ -482,6 +483,30 @@ Lattice::Lattice(ReadInputFiles params)
       neighbours[i][10] = coord_to_site({coord[0],   coord[1]+2, coord[2],   coord[3]}); couplings[i][10] = J3;
       neighbours[i][11] = coord_to_site({coord[0],   coord[1]-2, coord[2],   coord[3]}); couplings[i][11] = J3;
       nnbrs[i] += 4;
+    }
+  }
+  else if(latticetype == "SQUAREOBC")
+  {
+    for(int i = 0; i < Ntot; i++)
+    {
+      vector<int> coord = site_to_coord(i); //coordinates of a site in (a1,a2,a3,subind)
+
+
+      if (coord[0]+1 < Nx)                        {neighbours[i][nnbrs[i]]  = coord_to_site({coord[0]+1, coord[1],   coord[2],   coord[3]}); couplings[i][nnbrs[i]]  = J1; nnbrs[i] += 1;}
+      if (coord[0]-1 > -1)                        {neighbours[i][nnbrs[i]]  = coord_to_site({coord[0]-1, coord[1],   coord[2],   coord[3]}); couplings[i][nnbrs[i]]  = J1; nnbrs[i] += 1;}
+      if (coord[1]+1 < Ny)                        {neighbours[i][nnbrs[i]]  = coord_to_site({coord[0],   coord[1]+1, coord[2],   coord[3]}); couplings[i][nnbrs[i]]  = J1; nnbrs[i] += 1;}
+      if (coord[1]-1 > -1)                        {neighbours[i][nnbrs[i]]  = coord_to_site({coord[0],   coord[1]-1, coord[2],   coord[3]}); couplings[i][nnbrs[i]]  = J1; nnbrs[i] += 1;}
+
+
+      if ((coord[0]+1 < Nx) && (coord[1]+1 < Ny)) {neighbours[i][nnbrs[i]]  = coord_to_site({coord[0]+1, coord[1]+1, coord[2],   coord[3]}); couplings[i][nnbrs[i]]  = J2; nnbrs[i] += 1;}
+      if ((coord[0]-1 > -1) && (coord[1]-1 > -1)) {neighbours[i][nnbrs[i]]  = coord_to_site({coord[0]-1, coord[1]-1, coord[2],   coord[3]}); couplings[i][nnbrs[i]]  = J2; nnbrs[i] += 1;}
+      if ((coord[0]+1 < Nx) && (coord[1]-1 > -1)) {neighbours[i][nnbrs[i]]  = coord_to_site({coord[0]+1, coord[1]-1, coord[2],   coord[3]}); couplings[i][nnbrs[i]]  = J2; nnbrs[i] += 1;}
+      if ((coord[0]-1 > -1) && (coord[1]+1 < Ny)) {neighbours[i][nnbrs[i]]  = coord_to_site({coord[0]-1, coord[1]+1, coord[2],   coord[3]}); couplings[i][nnbrs[i]]  = J2; nnbrs[i] += 1;}
+
+      if (coord[0]+2 < Nx)                        {neighbours[i][nnbrs[i]]  = coord_to_site({coord[0]+2, coord[1],   coord[2],   coord[3]}); couplings[i][nnbrs[i]]  = J3; nnbrs[i] += 1;}
+      if (coord[0]-2 > -1)                        {neighbours[i][nnbrs[i]]  = coord_to_site({coord[0]-2, coord[1],   coord[2],   coord[3]}); couplings[i][nnbrs[i]]  = J3; nnbrs[i] += 1;}
+      if (coord[1]+2 < Ny)                        {neighbours[i][nnbrs[i]]  = coord_to_site({coord[0],   coord[1]+2, coord[2],   coord[3]}); couplings[i][nnbrs[i]]  = J3; nnbrs[i] += 1;}
+      if (coord[1]-2 > -1)                        {neighbours[i][nnbrs[i]]  = coord_to_site({coord[0],   coord[1]-2, coord[2],   coord[3]}); couplings[i][nnbrs[i]]  = J3; nnbrs[i] += 1;}
     }
   }
   else if(latticetype == "TRIANGULAR")
