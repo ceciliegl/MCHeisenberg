@@ -93,8 +93,8 @@ if __name__ == "__main__":
     try:
         run_number = sys.argv[1]
         betas = sys.argv[2]
-        tx = int(sys.argv[3])
-        ty = int(sys.argv[4])
+        tx = int(sys.argv[-2])
+        ty = int(sys.argv[-1])
     except:
         run_number = input('Run number: ')
         betas = input('Beta: ')
@@ -271,6 +271,13 @@ if __name__ == "__main__":
 
                 minz = np.sort(confn[:,2])
                 print(minz[:100])
+
+                """fig2, ax2 = plt.subplots(1, 2, figsize=(10, 6))
+
+                ax2.plot()
+
+
+                fig2.suptitle(rf"{run_number}   $\beta = {beta}$")"""
                 
 
     plt.show()
