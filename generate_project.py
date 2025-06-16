@@ -2,13 +2,13 @@ import os
 import numpy as np
 import random
 
-mainproject = "SSL_SquareOBC_Test"  #Set to zero if only one project.
+mainproject = "SSL_Square_RING200x200"  #Set to zero if only one project.
 project = "SI0_minE"
 description = "Running SSL square lattice."
 jobname = "myjob"
 time = "5:00:00"
-runmin = 1
-runmax = 1
+runmin = 10
+runmax = 10
 runsame = 0
 nruns = (runmax-runmin) + 1
 NICE = 11
@@ -17,11 +17,11 @@ NICE = 11
 #BOOST = 0       #Higher precision in Eigen-calculations. Time-consuming. Not implemented for now.
 
 #LATTICE#
-lattice   = "SQUAREOBC"
-NX        = 5*np.ones(nruns, int) #np.array([2], int) #2*np.ones(nruns, int)
+lattice   = "SQUARE"
+NX        = 200*np.ones(nruns, int) #np.array([2], int) #2*np.ones(nruns, int)
 nruns     = len(NX)
 runmax    = runmin + (nruns-1)
-NY        = 5*np.ones(nruns, int)
+NY        = 200*np.ones(nruns, int)
 if lattice == "FCC" or lattice == "DIAMOND" or lattice == "TETRAGONALDIAMOND" or lattice == "PYROCHLORE": #If lattice is three dimensional...
     NZ    = 1*np.ones(nruns, int)
 else:
@@ -41,12 +41,12 @@ J3a    = 0*np.ones(nruns)
 J3b    = 0*np.ones(nruns)
 DXY    = 0*np.ones(nruns) #Single ion anisotropy, favouring XY-plane.
 
-ncyc        = int(1e3)
+ncyc        = int(1e1)
 nequ        = int(1e3)
 nbins       = int(1)
 nconew      = int(100)
 print       = int(ncyc)    #Write out data every print cycle.
-configprint = int(1)
+configprint = int(1)       #Write out spin configuration at end of each beta.
 
 
 ncyc        = int(ncyc)
@@ -58,7 +58,7 @@ configprint = int(configprint)
 
 RANSEED = np.random.randint(1e8,1e10,nruns)
 
-EQUENERGY = -64+1e-10 #If minimize energy, measuring will start when this energy is reached.
+EQUENERGY = 123456789 #If minimize energy, measuring will start when this energy is reached. Set to 123456789 if you just want to print out the spin configuration after running the program. (123456789 NOT IMPLEMENTED)
 
 RESETOLDFILES = 1
 
@@ -176,7 +176,7 @@ for run in range(runmin, nruns + runmin):
     outfile.write("print = ")
     outfile.write(str(print))
     outfile.write("\n")
-    outfile.write("print = ")
+    outfile.write("configprint = ")
     outfile.write(str(configprint))
     outfile.write("\n")
     outfile.write("\n")

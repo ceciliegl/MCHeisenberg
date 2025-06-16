@@ -210,12 +210,12 @@ Solver::Solver(string dir0, Lattice mylattice0, ReadInputFiles params)
       cout<< "Could not open file." << endl;
   #endif
 
-  for(int i = 0; i < N; i++)
+  /*for(int i = 0; i < N; i++)
   {
     cout << "Site " << i << ":" << endl;
 
     for(int j = 0; j < nnbrs[i]; j++) cout << "coupling " << couplings[i][j] << " to site " << neighbours[i][j] << endl;
-  }
+  }*/
 }
 
 void Solver::solve(double beta0)
@@ -448,11 +448,12 @@ void Solver::Equilibrate()
 {
 
   calc_energy();
+  cout << "E = " << E << endl;
   calc_magnetisation();
 
   #ifdef ENERGYMINIMISATION
   int i = 0;
-    while(i < nequ && E > EQUENERGY)
+    while(i < nequ) // !& E > EQUENERGY)
     {
       MonteCarloUpdate();
       i++;
@@ -581,7 +582,8 @@ void Solver::Metropolis()
     newspin = newspin/sqrt(dot(newspin,newspin)); //Normalize the vector.
   #else
   #ifdef ENERGYMINIMISATION
-    newspin = (-1)*localfield(site); //Set the spin antiparallel to the local field.
+    vec3 locf = localfield(site); //Compute the local field at the site.
+    newspin = (-1)*locf/sqrt(dot(locf,locf)); //Set the spin antiparallel to the local field.
   #else
     newspin = randomunitvector(MYRAN); //Draw a random unit vector.
   #endif
